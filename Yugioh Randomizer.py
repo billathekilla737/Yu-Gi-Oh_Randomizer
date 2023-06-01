@@ -112,8 +112,13 @@ background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
 
 # # Create a label to display the current window size
-window_size_label = Label(root, text="Window size: {}x{}".format(root.winfo_width(), root.winfo_height()))
-window_size_label.pack(pady=10)
+#window_size_label = Label(root, text="Window size: {}x{}".format(root.winfo_width(), root.winfo_height()))
+#window_size_label.pack(pady=10)
+
+#Add a welcome message
+welcome_message = Label(root, text="Welcome to the Yugioh Randomizer!", font=("Helvetica", 16))
+welcome_message.pack(pady=10)
+
 
 # Create a button to generate random cards
 next_pack_button = Button(root, text="Next Pack", command=generate_random_cards, font=("Helvetica", 16))
@@ -130,6 +135,6 @@ card_number_labels = []
 image_labels = []
 
 # Start updating the window size label
-update_window_size_label()
+#update_window_size_label()
 
 root.mainloop()
