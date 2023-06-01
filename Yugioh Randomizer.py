@@ -4,17 +4,20 @@ import os
 from tkinter import Tk, Label, PhotoImage, Frame, Button
 from shutil import copyfile
 from tkinter.ttk import * # Import all the widgets from tkinter.ttk
-
-import os
-import random
-import sqlite3
-from shutil import copyfile
+import re
 from tkinter import *
 
 # Get the current directory of the Python script
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
+
+
+outputFile = open("output.txt", "w")
+
 def generate_random_cards():
+
+    #TODO make the frame that holds the cards scale with the window size
+
     global card_name_labels, card_number_labels, image_labels
 
     # Generate 10 random numbers from 1 to 1138 and sort them in ascending order
@@ -72,12 +75,26 @@ def generate_random_cards():
     # Display the card names, numbers, and images in a 2x5 grid
     for i, (card_number, card_name) in enumerate(card_data):
         # Display the card name
-        card_name_label = Label(frame, text=card_name)
+        
+
+        # Use regex to see if detect every Capital letter other than the first one and add a space before it
+        card_name = re.sub(r"(?!^)([A-Z])", r" \1", card_name)
+
+        # Add a space in front of the words "of", "the", and "and"
+        card_name = re.sub(r"(\w)(of|the|and)", r"\1 \2", card_name)
+
+        #write the card name to the output file
+        outputFile.write(card_name + "\n")
+
+
+        card_name_label = Label(frame, text=card_name, font=("Helvetica", 12))
+        card_name_label.configure(background='grey')
         card_name_label.grid(row=i // 5 * 3, column=i % 5 * 2)
         card_name_labels.append(card_name_label)
 
         # Display the card number
         card_number_label = Label(frame, text=card_number)
+        card_number_label.configure(background='grey')
         card_number_label.grid(row=i // 5 * 3 + 1, column=i % 5 * 2)
         card_number_labels.append(card_number_label)
         
@@ -90,11 +107,11 @@ def generate_random_cards():
             image_label.image = card_image  # Keep a reference to prevent garbage collection
             image_label.grid(row=i // 5 * 3 + 2, column=i % 5 * 2)
             image_labels.append(image_label)
+    
 
-
-def update_window_size_label():
-    window_size_label.config(text="Window size: {}x{}".format(root.winfo_width(), root.winfo_height()))
-    window_size_label.after(100, update_window_size_label)
+#def update_window_size_label():
+#    window_size_label.config(text="Window size: {}x{}".format(root.winfo_width(), root.winfo_height()))
+#    window_size_label.after(100, update_window_size_label)
 
 # Create the root window
 
@@ -133,6 +150,8 @@ frame.pack(pady=10)
 card_name_labels = []
 card_number_labels = []
 image_labels = []
+
+
 
 # Start updating the window size label
 #update_window_size_label()
