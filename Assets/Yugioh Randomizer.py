@@ -15,6 +15,7 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 
 outputFile = open("Trunk\Trunk.txt", "a")
 trunk_folder = "Trunk\\"
+
 def generate_random_cards():
     #TODO make the frame that holds the cards scale with the window size
 
@@ -59,12 +60,9 @@ def generate_random_cards():
     # Search for matching image files in the folder
     image_folder = os.path.join(current_directory, "YugiohCards")
     matching_images = []
-    #Wipe trunk folder
 
-
-
-   
-
+    # Fill the trunk folder with the images of the cards that were selected
+    ###########################################################################
     for card_number, card_name in card_data:
         image_filenames = [filename for filename in os.listdir(image_folder) if card_name in filename]
         if image_filenames:
@@ -80,7 +78,8 @@ def generate_random_cards():
         else:
             matching_images.append(None)  # Use None when image is not found
 
-    # Display the card names, numbers, and images in a 2x5 grid
+    # Display the cards to the Tkinter window
+    ###########################################################################
     for i, (card_number, card_name) in enumerate(card_data):
         # Display the card name
         
