@@ -2,6 +2,7 @@ import sqlite3
 import random
 import os
 from tkinter import Tk, Label, PhotoImage, Frame, Button
+import shutil
 from shutil import copyfile
 from tkinter.ttk import * # Import all the widgets from tkinter.ttk
 import re
@@ -13,7 +14,7 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 
 
 outputFile = open("output.txt", "w")
-
+trunk_folder = os.path.join(current_directory, "Trunk")
 def generate_random_cards():
 
     #TODO make the frame that holds the cards scale with the window size
@@ -59,7 +60,11 @@ def generate_random_cards():
     # Search for matching image files in the folder
     image_folder = os.path.join(current_directory, "YugiohCards")
     matching_images = []
-    trunk_folder = os.path.join(current_directory, "Trunk")
+    #Wipe trunk folder
+
+
+
+   
 
     for card_number, card_name in card_data:
         image_filenames = [filename for filename in os.listdir(image_folder) if card_name in filename]
@@ -68,7 +73,11 @@ def generate_random_cards():
             # Save the image to the "Trunk" folder
             if not os.path.exists(trunk_folder):
                 os.makedirs(trunk_folder)
-            copyfile(os.path.join(image_folder, image_filenames[0]), os.path.join(trunk_folder, image_filenames[0]))
+            source = os.path.join(image_folder, image_filenames[0])
+            #destination = os.path.join(trunk_folder, image_filenames[0])
+            #copy the image to the trunk folder but append the card number to the front of the file name
+            destination = os.path.join(trunk_folder, str(card_number) + " " + image_filenames[0])
+            copyfile(source, destination)
         else:
             matching_images.append(None)  # Use None when image is not found
 
@@ -109,15 +118,23 @@ def generate_random_cards():
             image_labels.append(image_label)
     
 
-#def update_window_size_label():
-#    window_size_label.config(text="Window size: {}x{}".format(root.winfo_width(), root.winfo_height()))
-#    window_size_label.after(100, update_window_size_label)
+def update_window_size_label():
+    window_size_label.config(text="Window size: {}x{}".format(root.winfo_width(), root.winfo_height()))
+    window_size_label.after(100, update_window_size_label)
 
 # Create the root window
 
+
+def clear_trunk():
+    if os.path.exists(trunk_folder):
+        shutil.rmtree(trunk_folder)
+        os.makedirs(trunk_folder)
+    else:
+        os.makedirs(trunk_folder)
+
 root = Tk()
 root.title("Yugioh Randomizer")
-root.geometry("1250x550")
+root.geometry("1300x650")
 root.configure(background='black')
 background_image = PhotoImage(file="background.png")
 background_label = Label(root, image=background_image)
@@ -128,9 +145,10 @@ background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
 
 
-# # Create a label to display the current window size
-#window_size_label = Label(root, text="Window size: {}x{}".format(root.winfo_width(), root.winfo_height()))
-#window_size_label.pack(pady=10)
+ # Create a label to display the current window size
+window_size_label = Label(root, text="Window size: {}x{}".format(root.winfo_width(), root.winfo_height()), font=("Helvetica", 10),background='black', foreground='white')
+#place in bottom right corner
+window_size_label.place(relx=1.0, rely=1.0, anchor=SE)
 
 #Add a welcome message
 welcome_message = Label(root, text="Welcome to the Yugioh Randomizer!", font=("Helvetica", 16))
@@ -140,6 +158,11 @@ welcome_message.pack(pady=10)
 # Create a button to generate random cards
 next_pack_button = Button(root, text="Next Pack", command=generate_random_cards, font=("Helvetica", 16))
 next_pack_button.pack(pady=10)
+
+# Create a button to clear the trunk folder
+clear_trunk_button = Button(root, text="Clear Trunk", command=clear_trunk, font=("Helvetica", 16))
+clear_trunk_button.pack(pady=10)
+
 
 # Create a frame to hold the card labels and images
 frame = Frame(root)
@@ -154,6 +177,6 @@ image_labels = []
 
 
 # Start updating the window size label
-#update_window_size_label()
+update_window_size_label()
 
 root.mainloop()
