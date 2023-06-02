@@ -1,3 +1,5 @@
 *.txt
 trunk/
 output/
+*.exe
+*.exe.lnk

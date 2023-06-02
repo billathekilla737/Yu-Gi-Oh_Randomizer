@@ -174,8 +174,6 @@ card_name_labels = []
 card_number_labels = []
 image_labels = []
 
-
-
 # Start updating the window size label
 update_window_size_label()
 
