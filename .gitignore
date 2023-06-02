@@ -3,3 +3,5 @@ trunk/
 output/
 *.exe
 *.exe.lnk
+EXE_Assets/
+Saves/
