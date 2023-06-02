@@ -1,3 +1,3 @@
 @echo off
 cd /d "%~dp0"
-python "Yugioh Randomizer.py"
+python "Assets\Yugioh Card List.db"

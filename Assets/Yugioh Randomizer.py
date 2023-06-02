@@ -13,10 +13,9 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 
 
 
-outputFile = open("output.txt", "w")
-trunk_folder = os.path.join(current_directory, "Trunk")
+outputFile = open("Trunk\Trunk.txt", "a")
+trunk_folder = "Trunk\\"
 def generate_random_cards():
-
     #TODO make the frame that holds the cards scale with the window size
 
     global card_name_labels, card_number_labels, image_labels
@@ -76,7 +75,7 @@ def generate_random_cards():
             source = os.path.join(image_folder, image_filenames[0])
             #destination = os.path.join(trunk_folder, image_filenames[0])
             #copy the image to the trunk folder but append the card number to the front of the file name
-            destination = os.path.join(trunk_folder, str(card_number) + " " + image_filenames[0])
+            destination = ("Trunk\\" + str(card_number) + " " + image_filenames[0])
             copyfile(source, destination)
         else:
             matching_images.append(None)  # Use None when image is not found
@@ -93,7 +92,7 @@ def generate_random_cards():
         card_name = re.sub(r"(\w)(of|the|and)", r"\1 \2", card_name)
 
         #write the card name to the output file
-        outputFile.write(card_name + "\n")
+        outputFile.write(str(card_number) + " " + card_name + "\n")
 
 
         card_name_label = Label(frame, text=card_name, font=("Helvetica", 12))
@@ -126,17 +125,26 @@ def update_window_size_label():
 
 
 def clear_trunk():
-    if os.path.exists(trunk_folder):
-        shutil.rmtree(trunk_folder)
-        os.makedirs(trunk_folder)
-    else:
-        os.makedirs(trunk_folder)
+    #Clear the trunk folder
+    for filename in os.listdir(trunk_folder):
+        file_path = os.path.join(trunk_folder, filename)
+        if file_path != os.path.join(trunk_folder, "Trunk.txt"):
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+            except Exception as e:
+                print("Failed to delete %s. Reason: %s" % (file_path, e))
+
+    #Now clear the output file
+    with open("Trunk\Trunk.txt", "w") as outputFile:
+        outputFile.write("")
+    
 
 root = Tk()
 root.title("Yugioh Randomizer")
 root.geometry("1300x650")
 root.configure(background='black')
-background_image = PhotoImage(file="background.png")
+background_image = PhotoImage(file=r"Assets\background.png")
 background_label = Label(root, image=background_image)
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
